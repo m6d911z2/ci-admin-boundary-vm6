@@ -1,2 +1,6 @@
-# VM6_UNINSTALLED_APP_SENTINEL_20260911
+queue_rules:
+  - name: default
+    queue_conditions: []
+    merge_conditions:
+      - label = vm6-never-merge-graphql-capture
 pull_request_rules: []
