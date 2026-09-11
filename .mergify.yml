@@ -1,2 +1,7 @@
-# VM6_APP_SELECTION_POST_REMOVAL_V2_20260911
+# VM6_COMMAND_PERMISSION_CONTROL_20260911
+queue_rules:
+  - name: default
+    queue_conditions: []
+    merge_conditions:
+      - label = vm6-never-merge
 pull_request_rules: []
