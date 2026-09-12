@@ -1,0 +1,1 @@
+VM6 queue TOCTOU canary - must never reach main through external synthetic edit.
