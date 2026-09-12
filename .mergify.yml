@@ -6,3 +6,6 @@ commands_restrictions:
 queue_rules:
   - name: default
     queue_conditions: []
+    merge_conditions:
+      - check-success = vm6-dequeue-hold-never
+    checks_timeout: null
