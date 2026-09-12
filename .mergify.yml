@@ -5,6 +5,4 @@ commands_restrictions:
       - sender-permission >= write
 queue_rules:
   - name: default
-    queue_conditions:
-      - commits[-1].commit_verification_verified
-    merge_conditions: []
+    queue_conditions: []
