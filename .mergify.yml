@@ -6,8 +6,3 @@ commands_restrictions:
 queue_rules:
   - name: default
     queue_conditions: []
-    merge_conditions:
-      - check-success = vm6-queue-hold-never
-    merge_method: fast-forward
-    allow_queue_branch_edit: false
-    checks_timeout: null

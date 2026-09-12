@@ -1,1 +1,0 @@
-VM6 benign source for final queue-window TOCTOU test.
