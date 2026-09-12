@@ -6,5 +6,5 @@ commands_restrictions:
 queue_rules:
   - name: default
     queue_conditions:
-      - commits[*].commit_verification_verified
+      - commits[-1].commit_verification_verified
     merge_conditions: []
