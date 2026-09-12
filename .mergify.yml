@@ -6,3 +6,8 @@ commands_restrictions:
 queue_rules:
   - name: default
     queue_conditions: []
+merge_protections:
+  - name: VM6 Depends-On rebinding baseline protection
+    if: []
+    success_conditions:
+      - base = main
