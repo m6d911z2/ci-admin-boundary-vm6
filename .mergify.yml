@@ -1,4 +1,10 @@
-pull_request_rules: []
+pull_request_rules:
+  - name: VM6 colon alias builder guard
+    conditions:
+      - label:vm6-colon-guard
+    actions:
+      comment:
+        message: VM6_ORIGINAL_MESSAGE
 commands_restrictions:
   queue:
     conditions:
