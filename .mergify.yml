@@ -1,4 +1,4 @@
-extends: vm6-barrier-trusted-hold-20260914
+pull_request_rules: []
 commands_restrictions:
   queue:
     conditions:
