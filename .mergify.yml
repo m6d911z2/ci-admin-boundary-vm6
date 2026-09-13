@@ -1,4 +1,4 @@
-pull_request_rules: []
+extends: vm6-barrier-rename-20260912
 commands_restrictions:
   queue:
     conditions:
