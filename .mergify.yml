@@ -6,3 +6,11 @@ commands_restrictions:
 queue_rules:
   - name: default
     queue_conditions: []
+merge_protections:
+  - name: VM6 same-head config freshness probe
+    if: []
+    success_conditions:
+      - base = main
+merge_protections_settings:
+  reporting_method: check-runs
+  post_comment: false
