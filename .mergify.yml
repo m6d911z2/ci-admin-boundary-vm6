@@ -6,9 +6,3 @@ commands_restrictions:
 queue_rules:
   - name: default
     queue_conditions: []
-    merge_conditions:
-      - check-success = @github-actions/vm6-edit-guard
-      - check-success = @github-actions/vm6-edit-release
-    merge_method: fast-forward
-    allow_queue_branch_edit: true
-    checks_timeout: null
