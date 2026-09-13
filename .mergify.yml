@@ -1,4 +1,4 @@
-extends: vm6-barrier-rename-20260912
+extends: vm6-barrier-trusted-hold-20260914
 commands_restrictions:
   queue:
     conditions:
