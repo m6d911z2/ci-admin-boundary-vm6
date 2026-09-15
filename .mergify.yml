@@ -2,31 +2,12 @@ merge_protections_settings:
   reporting_method: check-runs
   post_comment: false
 merge_protections:
-  - name: VM6 authoritative negative bot-account protection
+  - name: VM6 bot-account positive protection control
     if:
       - number = 65
     success_conditions:
-      - label = vm6-bot-mp-block-never-20260916
-pull_request_rules:
-  - name: VM6 create same-head merge trigger
-    conditions:
-      - number = 65
-      - -closed
-      - -label = vm6-bot-mp-fire-20260916
-    actions:
-      label:
-        add:
-          - vm6-bot-mp-fire-20260916
-  - name: VM6 bot-account merge behind failed protection
-    conditions:
-      - number = 65
-      - -draft
-      - -closed
       - label = vm6-bot-mp-fire-20260916
-    actions:
-      merge:
-        method: merge
-        merge_bot_account: livastic-vm6-primary-20260911
+pull_request_rules: []
 commands_restrictions:
   refresh:
     conditions:
