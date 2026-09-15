@@ -1,14 +1,22 @@
+merge_protections_settings:
+  reporting_method: check-runs
+  post_comment: false
+merge_protections:
+  - name: VM6 bot-account must honor impossible protection
+    if:
+      - number = 65
+    success_conditions:
+      - label = vm6-bot-mp-never-20260916
 pull_request_rules:
-  - name: VM6 create disposable bot-account enforcement PR
+  - name: VM6 bot-account merge enforcement probe
     conditions:
-      - number = 6
+      - number = 65
+      - -draft
       - -closed
     actions:
-      copy:
-        branches:
-          - vm6-bot-mp-base-20260916
-        report_mode:
-          - check
+      merge:
+        method: merge
+        merge_bot_account: livastic-vm6-primary-20260911
 commands_restrictions:
   queue:
     conditions:
