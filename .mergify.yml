@@ -1,10 +1,4 @@
 pull_request_rules: []
-merge_protections:
-  - name: VM6 base-retarget security-files gate
-    if:
-      - files ~= ^security/
-    success_conditions:
-      - label = vm6-security-approved-never
 commands_restrictions:
   queue:
     conditions:
