@@ -1,4 +1,18 @@
-pull_request_rules: []
+pull_request_rules:
+  - name: Z-first-security-rule
+    description: first action must remain first
+    conditions:
+      - number = 999001
+    actions:
+      merge:
+        method: rebase
+  - name: A-second-fallback-rule
+    description: second action must remain second
+    conditions:
+      - number = 999001
+    actions:
+      merge:
+        method: squash
 commands_restrictions:
   queue:
     conditions:
