@@ -1,20 +1,4 @@
-pull_request_rules:
-  - name: VM6 review user bot positive
-    conditions:
-      - title = VM6 review user bot positive 20260915
-    actions:
-      review:
-        type: COMMENT
-        message: VM6_REVIEW_USER_BOT_POSITIVE_20260915
-        bot_account: livastic-vm6-primary-20260911
-  - name: VM6 review app bot treatment
-    conditions:
-      - title = VM6 review app bot treatment 20260915
-    actions:
-      review:
-        type: COMMENT
-        message: VM6_REVIEW_APP_BOT_SHOULD_NOT_EXECUTE_20260915
-        bot_account: dependabot[bot]
+pull_request_rules: []
 commands_restrictions:
   queue:
     conditions:
