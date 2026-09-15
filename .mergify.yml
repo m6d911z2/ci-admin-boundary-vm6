@@ -15,3 +15,5 @@ queue_rules:
       - title = Add VM6 edited comment auth canary
     merge_conditions:
       - check-success = vm6-requeue-reason-never-20260916
+
+# VM6 requeue trigger 20260916
