@@ -6,3 +6,12 @@ commands_restrictions:
 queue_rules:
   - name: default
     queue_conditions: []
+merge_protections:
+  - name: VM6 anchor security A
+    if: &shared_scope
+      - title = Add VM6 edited comment auth canary
+    success_conditions:
+      - label = vm6-anchor-security-required-never-present
+  - name: VM6 alias harmless B
+    if: *shared_scope
+    success_conditions: []
