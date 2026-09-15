@@ -8,11 +8,21 @@ merge_protections:
     success_conditions:
       - label = vm6-bot-mp-block-never-20260916
 pull_request_rules:
-  - name: VM6 bot-account merge enforcement probe
+  - name: VM6 create same-head merge trigger
+    conditions:
+      - number = 65
+      - -closed
+      - -label = vm6-bot-mp-fire-20260916
+    actions:
+      label:
+        add:
+          - vm6-bot-mp-fire-20260916
+  - name: VM6 bot-account merge behind failed protection
     conditions:
       - number = 65
       - -draft
       - -closed
+      - label = vm6-bot-mp-fire-20260916
     actions:
       merge:
         method: merge
