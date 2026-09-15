@@ -8,15 +8,15 @@ merge_protections:
     success_conditions:
       - label = vm6-bot-mp-never-20260916
 pull_request_rules:
-  - name: VM6 bot-account merge enforcement probe
+  - name: VM6 satisfy disposable protection control
     conditions:
       - number = 65
       - -draft
       - -closed
     actions:
-      merge:
-        method: merge
-        merge_bot_account: livastic-vm6-primary-20260911
+      label:
+        add:
+          - vm6-bot-mp-never-20260916
 commands_restrictions:
   queue:
     conditions:
