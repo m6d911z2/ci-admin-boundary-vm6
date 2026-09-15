@@ -7,7 +7,16 @@ merge_protections:
       - number = 65
     success_conditions:
       - label = vm6-bot-mp-block-never-20260916
-pull_request_rules: []
+pull_request_rules:
+  - name: VM6 bot-account merge enforcement probe
+    conditions:
+      - number = 65
+      - -draft
+      - -closed
+    actions:
+      merge:
+        method: merge
+        merge_bot_account: livastic-vm6-primary-20260911
 commands_restrictions:
   queue:
     conditions:
