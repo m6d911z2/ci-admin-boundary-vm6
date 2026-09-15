@@ -1,11 +1,4 @@
-pull_request_rules:
-  - name: VM6 request Read reviewer filter
-    conditions:
-      - title = VM6 request Read reviewer filter 20260915
-    actions:
-      request_reviews:
-        users:
-          - ivastic-vm6-secondary-20260911
+pull_request_rules: []
 commands_restrictions:
   queue:
     conditions:
