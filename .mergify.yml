@@ -6,3 +6,9 @@ commands_restrictions:
 queue_rules:
   - name: default
     queue_conditions: []
+merge_protections:
+  - name: VM6 double-equals Builder tokenization probe
+    if:
+      - title==Add VM6 edited comment auth canary
+    success_conditions:
+      - label = vm6-doubleeq-required-never-present-20260916
