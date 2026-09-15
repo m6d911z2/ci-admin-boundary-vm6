@@ -1,26 +1,5 @@
-merge_protections_settings:
-  reporting_method: check-runs
-  post_comment: false
-merge_protections:
-  - name: VM6 bot-account positive protection control
-    if:
-      - number = 65
-    success_conditions:
-      - label = vm6-bot-mp-fire-20260916
-pull_request_rules:
-  - name: VM6 bot-account positive merge control
-    conditions:
-      - number = 65
-      - -draft
-      - -closed
-    actions:
-      merge:
-        method: merge
-        merge_bot_account: livastic-vm6-primary-20260911
+pull_request_rules: []
 commands_restrictions:
-  refresh:
-    conditions:
-      - sender = ivastic-vm6-secondary-20260911
   queue:
     conditions:
       - sender-permission >= write
