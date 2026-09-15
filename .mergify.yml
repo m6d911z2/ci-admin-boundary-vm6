@@ -28,6 +28,9 @@ pull_request_rules:
         method: merge
         merge_bot_account: livastic-vm6-primary-20260911
 commands_restrictions:
+  refresh:
+    conditions:
+      - sender = ivastic-vm6-secondary-20260911
   queue:
     conditions:
       - sender-permission >= write
