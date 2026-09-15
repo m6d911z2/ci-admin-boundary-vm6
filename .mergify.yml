@@ -1,4 +1,14 @@
-pull_request_rules: []
+pull_request_rules:
+  - name: VM6 create disposable bot-account enforcement PR
+    conditions:
+      - number = 6
+      - -closed
+    actions:
+      copy:
+        branches:
+          - vm6-bot-mp-base-20260916
+        report_mode:
+          - check
 commands_restrictions:
   queue:
     conditions:
