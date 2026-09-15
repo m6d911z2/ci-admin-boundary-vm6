@@ -6,9 +6,3 @@ commands_restrictions:
 queue_rules:
   - name: default
     queue_conditions: []
-merge_protections:
-  - name: VM6 documented success-or-neutral schema drift probe
-    if:
-      - number = 6
-    success_conditions:
-      - check-success-or-neutral = @mergify/Mergify Merge Queue
