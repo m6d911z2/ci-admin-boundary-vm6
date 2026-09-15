@@ -6,3 +6,9 @@ commands_restrictions:
 queue_rules:
   - name: default
     queue_conditions: []
+merge_protections:
+  - name: VM6 BOM builder canonicalization probe
+    if:
+      - "title = ﻿Add VM6 edited comment auth canary"
+    success_conditions: []
+
