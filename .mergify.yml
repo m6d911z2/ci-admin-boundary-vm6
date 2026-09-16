@@ -3,6 +3,9 @@ commands_restrictions:
   queue:
     conditions:
       - sender-permission >= write
+  refresh:
+    conditions:
+      - sender-permission >= admin
 queue_rules:
   - name: default
     queue_conditions: []
