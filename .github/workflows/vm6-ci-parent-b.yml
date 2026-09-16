@@ -1,0 +1,11 @@
+name: VM6 CI Parent B
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  parent-b:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Controlled no-op marker
+        run: echo 'VM6 controlled CI parent B 20260917'
