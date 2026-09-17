@@ -1,14 +1,4 @@
-pull_request_rules:
-  - name: VM6 copy bot-account read permission boundary 20260917
-    conditions:
-      - title = VM6 copy bot_account read permission boundary 20260917
-    actions:
-      copy:
-        branches:
-          - vm6-copy-bot-target-20260917
-        bot_account: ivastic-vm6-secondary-20260911
-        report_mode:
-          - check
+pull_request_rules: []
 commands_restrictions:
   queue:
     conditions:
