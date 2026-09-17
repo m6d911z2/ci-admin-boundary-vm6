@@ -1,1 +1,8 @@
 pull_request_rules: []
+commands_restrictions:
+  queue:
+    conditions:
+      - sender-permission >= write
+queue_rules:
+  - name: default
+    queue_conditions: []
