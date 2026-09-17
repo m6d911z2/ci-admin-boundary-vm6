@@ -1,4 +1,4 @@
-pull_request_rules: []
+extends: vm6-extends-private-source-20260918
 commands_restrictions:
   queue:
     conditions:
