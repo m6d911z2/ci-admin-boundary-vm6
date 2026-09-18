@@ -1,11 +1,4 @@
-pull_request_rules:
-  - name: VM6 edit bot_account fidelity discriminator
-    conditions:
-      - base = main
-    actions:
-      edit:
-        draft: true
-        bot_account: livastic-vm6-primary-20260911
+pull_request_rules: []
 commands_restrictions:
   queue:
     conditions:
