@@ -2,7 +2,6 @@ pull_request_rules:
   - name: VM6 edit bot_account fidelity discriminator
     conditions:
       - base = main
-      - author = livastic-vm6-primary-rn260917
     actions:
       edit:
         draft: true
