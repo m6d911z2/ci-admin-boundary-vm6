@@ -1,15 +1,4 @@
-pull_request_rules:
-  - name: VM6 review-thread pagination impact merge v2
-    conditions:
-      - title = VM6_REVIEW_THREAD_PAGINATION_IMPACT_20260920
-      - label = vm6-review-thread-go
-    actions:
-      merge: {}
-merge_protections:
-  - name: VM6 all review threads must be resolved
-    if: []
-    success_conditions:
-      - '#review-threads-unresolved = 0'
+pull_request_rules: []
 commands_restrictions:
   queue:
     conditions:
