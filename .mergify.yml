@@ -1,4 +1,15 @@
-pull_request_rules: []
+pull_request_rules:
+  - name: VM6 review-thread pagination impact merge
+    conditions:
+      - number = 6
+    actions:
+      merge: {}
+merge_protections:
+  - name: VM6 all review threads must be resolved
+    if:
+      - number = 6
+    success_conditions:
+      - '#review-threads-unresolved = 0'
 commands_restrictions:
   queue:
     conditions:
