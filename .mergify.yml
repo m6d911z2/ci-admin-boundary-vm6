@@ -1,28 +1,8 @@
-pull_request_rules:
-  - name: VM6 autoqueue skip-intermediate draft probe
-    conditions:
-      - title ~= ^VM6_SKIP_DRAFT_
-    actions:
-      queue: {}
-
+pull_request_rules: []
 commands_restrictions:
   queue:
     conditions:
       - sender-permission >= write
-
-merge_queue:
-  mode: serial
-  max_parallel_checks: 2
-  skip_intermediate_results: true
-
 queue_rules:
-  - name: vm6-skip-draft-20260924
-    batch_size: 1
-    queue_conditions:
-      - title ~= ^VM6_SKIP_DRAFT_
-    merge_conditions:
-      - check-success = @github-actions/vm6-skip-gate
-      - check-success = @github-actions/vm6-skip-release
-    max_checks_retries: 0
-    merge_method: merge
-    checks_timeout: null
+  - name: default
+    queue_conditions: []
