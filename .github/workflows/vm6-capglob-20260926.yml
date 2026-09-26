@@ -1,0 +1,26 @@
+name: VM6 capglob runtime
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  scopes-upload:
+    if: ${{ !startsWith(github.head_ref, 'mergify/merge-queue/') }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Upload controlled manual scope
+        uses: Mergifyio/gha-mergify-ci@0fc785ffb514dd34f73b198f1fbeb56bebecc789
+        with:
+          action: scopes-upload
+          scopes: '@acme/capglob'
+          token: ${{ secrets.MERGIFY_TOKEN }}
+
+  vm6-capglob-hold:
+    if: ${{ startsWith(github.head_ref, 'mergify/merge-queue/') }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Hold speculative check
+        run: |
+          echo "VM6 controlled capacity discriminator"
+          sleep 240
