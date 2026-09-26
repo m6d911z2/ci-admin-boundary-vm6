@@ -24,3 +24,4 @@ jobs:
         run: |
           echo "VM6 controlled capacity discriminator"
           sleep 240
+          exit 1
