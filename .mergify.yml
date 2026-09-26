@@ -1,8 +1,30 @@
-pull_request_rules: []
+pull_request_rules:
+  - name: VM6 capglob label queue
+    conditions:
+      - label = vm6-capglob-queue-20260926
+    actions:
+      queue: {}
+
 commands_restrictions:
   queue:
     conditions:
       - sender-permission >= write
+
 queue_rules:
-  - name: default
+  - name: vm6-capglob-20260926
     queue_conditions: []
+    merge_conditions:
+      - check-success = vm6-capglob-hold
+    batch_size: 1
+    merge_method: merge
+    checks_timeout: null
+
+merge_queue:
+  mode: parallel
+  max_parallel_checks: 2
+
+scopes:
+  source:
+    manual:
+  capacities:
+    '@acme/*': 1
