@@ -26,8 +26,8 @@ merge_queue:
 scopes:
   source:
     files:
-      acme/capglob:
+      acme-capglob:
         include:
           - vm6-capglob/**
   capacities:
-    'acme/*': 1
+    'acme-*': 1
