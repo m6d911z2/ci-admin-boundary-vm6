@@ -11,7 +11,7 @@ commands_restrictions:
       - sender-permission >= write
 
 queue_rules:
-  - name: vm6-capglob-files-20260927
+  - name: vm6-capglob-20260926
     queue_conditions: []
     merge_conditions:
       - check-success = vm6-capglob-hold
@@ -25,9 +25,6 @@ merge_queue:
 
 scopes:
   source:
-    files:
-      acme-capglob:
-        include:
-          - vm6-capglob/**
+    manual:
   capacities:
-    'acme-*': 1
+    '@acme/*': 1
