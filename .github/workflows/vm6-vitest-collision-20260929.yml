@@ -10,7 +10,6 @@ on:
         options:
           - good
           - collision
-
 jobs:
   vitest:
     runs-on: ubuntu-latest
@@ -68,5 +67,11 @@ jobs:
         run: |
           set -euo pipefail
           export GITHUB_REPOSITORY='m6d911z2/mergify-transfer-boundary-vm6'
+          export GITHUB_HEAD_REF=''
+          export GITHUB_BASE_REF=''
+          export GITHUB_REF_NAME='main'
+          export GITHUB_REF_TYPE='branch'
+          export GITHUB_REF='refs/heads/main'
+          export GITHUB_SHA='9903c75e03da108ffba7894acdc07db1fc8058ff'
           cd /tmp/vm6-vitest-collision
           corepack pnpm exec vitest run --config vitest.config.mjs
