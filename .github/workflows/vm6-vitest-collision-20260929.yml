@@ -19,7 +19,7 @@ jobs:
     steps:
       - uses: actions/setup-node@v5
         with:
-          node-version: "20"
+          node-version: "22"
       - name: Create isolated Vitest fixture
         shell: bash
         run: |
@@ -33,7 +33,7 @@ jobs:
             "type": "module"
           }
           JSON
-          npm install --no-save --no-package-lock vitest@4.1.10 @mergifyio/vitest@0.4.1
+          corepack pnpm add vitest@4.1.10 @mergifyio/vitest@0.4.1 --reporter=silent
           cat > vitest.config.mjs <<'JS'
           import { defineConfig } from 'vitest/config';
           import MergifyReporter from '@mergifyio/vitest';
@@ -68,4 +68,4 @@ jobs:
         run: |
           set -euo pipefail
           cd /tmp/vm6-vitest-collision
-          npx vitest run --config vitest.config.mjs
+          corepack pnpm exec vitest run --config vitest.config.mjs
