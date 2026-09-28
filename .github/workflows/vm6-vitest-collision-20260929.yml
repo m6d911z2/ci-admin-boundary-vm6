@@ -1,0 +1,71 @@
+name: VM6 Vitest Quarantine Collision 20260929
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "good or collision"
+        required: true
+        type: choice
+        options:
+          - good
+          - collision
+
+jobs:
+  vitest:
+    runs-on: ubuntu-latest
+    env:
+      MERGIFY_TOKEN: ${{ secrets.MERGIFY_TOKEN }}
+    steps:
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "22"
+      - name: Create isolated Vitest fixture
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/vm6-vitest-collision
+          cd /tmp/vm6-vitest-collision
+          cat > package.json <<'JSON'
+          {
+            "name": "vm6-vitest-collision",
+            "private": true,
+            "type": "module"
+          }
+          JSON
+          npm install --no-save --no-package-lock vitest@4.1.10 @mergifyio/vitest@0.4.1
+          cat > vitest.config.mjs <<'JS'
+          import { defineConfig } from 'vitest/config';
+          import MergifyReporter from '@mergifyio/vitest';
+
+          export default defineConfig({
+            test: {
+              include: ['*.test.mjs'],
+              reporters: ['default', new MergifyReporter()],
+            },
+          });
+          JS
+          cat > good.test.mjs <<'JS'
+          import { describe, expect, test } from 'vitest';
+          describe('security', () => {
+            test('same', () => {
+              expect(1).toBe(1);
+            });
+          });
+          JS
+          if [ "${{ inputs.mode }}" = "collision" ]; then
+            cat > bad.test.mjs <<'JS'
+          import { describe, expect, test } from 'vitest';
+          describe('security', () => {
+            test('same', () => {
+              expect('critical invariant').toBe('preserved');
+            });
+          });
+          JS
+          fi
+      - name: Run Vitest with current Mergify reporter
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd /tmp/vm6-vitest-collision
+          npx vitest run --config vitest.config.mjs
