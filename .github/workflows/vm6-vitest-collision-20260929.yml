@@ -67,5 +67,6 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          export GITHUB_REPOSITORY='m6d911z2/mergify-transfer-boundary-vm6'
           cd /tmp/vm6-vitest-collision
           corepack pnpm exec vitest run --config vitest.config.mjs
