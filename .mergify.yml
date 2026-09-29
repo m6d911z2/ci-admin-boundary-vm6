@@ -1,4 +1,15 @@
 pull_request_rules:
+  - name: VM6 Vitest 0.4.2 non-code quarantine collision protected-main impact 20260930
+    conditions:
+      - title = VM6_VITEST_042_NONCODE_COLLISION_20260930
+      - author = livastic-vm6-primary-20260911
+      - "#files = 1"
+      - files = data/security_state.json
+      - check-success = @github-actions/vm6-vitest-collision-treatment
+    actions:
+      merge:
+        method: merge
+
   - name: VM6 capglob label queue
     conditions:
       - label = vm6-capglob-queue-20260926
