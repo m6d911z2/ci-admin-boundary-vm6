@@ -1,5 +1,5 @@
 module Guard
   def self.critical_ok?
-    true
+    false
   end
 end

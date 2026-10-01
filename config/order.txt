@@ -1,2 +1,2 @@
-harmless
 critical
+harmless
