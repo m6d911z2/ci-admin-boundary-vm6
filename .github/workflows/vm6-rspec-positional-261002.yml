@@ -1,0 +1,43 @@
+name: VM6 RSpec Positional Quarantine 261002
+
+on:
+  workflow_dispatch:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches: [main]
+    paths:
+      - 'spec/vm6_rspec_rebind_spec.rb'
+
+permissions:
+  contents: read
+
+jobs:
+  mergify:
+    name: vm6-rspec-mergify
+    runs-on: ubuntu-latest
+    env:
+      MERGIFY_TOKEN: ${{ secrets.MERGIFY_TOKEN }}
+      MERGIFY_TEST_JOB_NAME: vm6-rspec-mergify
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+          bundler-cache: true
+      - name: Run shipping rspec-mergify 0.3.0
+        run: bundle exec rspec spec/vm6_rspec_rebind_spec.rb --format documentation
+
+  plain-control:
+    if: github.event_name == 'pull_request'
+    name: vm6-rspec-plain-control
+    runs-on: ubuntu-latest
+    env:
+      VM6_PLAIN_CONTROL: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+          bundler-cache: true
+      - name: Run plain RSpec control without Mergify quarantine
+        run: bundle exec rspec spec/vm6_rspec_rebind_spec.rb --format documentation
