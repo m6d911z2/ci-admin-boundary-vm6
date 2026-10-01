@@ -20,6 +20,7 @@ pull_request_rules:
       - base = vm6-crossbase-protected-261001
       - title = VM6_CROSSBASE_PROTECTED_B_261001
       - author = livastic-vm6-primary-20260911
+      - label = vm6-crossbase-ready-b-261001
       - -scope = critical
     actions:
       merge:
