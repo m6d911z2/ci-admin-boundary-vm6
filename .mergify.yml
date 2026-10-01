@@ -5,6 +5,17 @@ pull_request_rules:
     actions:
       queue: {}
 
+  - name: VM6 PW043 JUnit boundary protected merge 261002
+    conditions:
+      - base = vm6-pw043-junit-protected-261002
+      - title = VM6_PW043_JUNIT_BOUNDARY_TREATMENT_261002
+      - author = livastic-vm6-primary-20260911
+      - label = vm6-pw043-ready-261002
+      - check-success = vm6-pw043-guard
+    actions:
+      merge:
+        method: merge
+
 commands_restrictions:
   queue:
     conditions:
