@@ -26,6 +26,7 @@ jobs:
       - name: Run trusted RSpec suite and print logical IDs
         env:
           MERGIFY_TOKEN: ${{ secrets.MERGIFY_TOKEN }}
+          RUBYOPT: -rrspec_mergify
         shell: bash
         run: |
           set +e
