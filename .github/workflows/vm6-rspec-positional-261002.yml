@@ -26,11 +26,10 @@ jobs:
       - name: Run trusted RSpec suite and print logical IDs
         env:
           MERGIFY_TOKEN: ${{ secrets.MERGIFY_TOKEN }}
-          RUBYOPT: -rrspec_mergify
         shell: bash
         run: |
           set +e
-          rspec spec/guard_spec.rb --format progress --format json --out /tmp/vm6-rspec.json
+          rspec --require rspec_mergify spec/guard_spec.rb --format progress --format json --out /tmp/vm6-rspec.json
           rc=$?
           ruby -rjson -e 'j=JSON.parse(File.read("/tmp/vm6-rspec.json")); j["examples"].each{|e| puts "VM6_RSPEC_ID=#{e["id"]} DESC=#{e["description"]} STATUS=#{e["status"]}"}'
           exit "$rc"
