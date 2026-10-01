@@ -1,0 +1,32 @@
+name: VM6 Playwright 043 JUnit Guard
+
+on:
+  pull_request:
+    branches:
+      - vm6-pw043-junit-protected-261002
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+
+jobs:
+  vm6-pw043-guard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install exact shipping Playwright integration
+        run: |
+          npm init -y
+          npm install --no-audit --no-fund @playwright/test@1.62.1 @mergifyio/playwright@0.4.3
+      - name: Run protected Playwright guard
+        env:
+          MERGIFY_TOKEN: ${{ secrets.MERGIFY_TOKEN }}
+        run: |
+          cat > playwright.vm6.config.mjs <<'JS'
+          import { withMergify } from '@mergifyio/playwright';
+          export default withMergify({ testDir: './vm6-pw043-tests', workers: 1, reporter: 'line' });
+          JS
+          npx playwright test -c playwright.vm6.config.mjs
