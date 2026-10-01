@@ -26,8 +26,8 @@ merge_queue:
 scopes:
   source:
     files:
-      brace_range:
+      brace_control:
         include:
-          - 'vm6-capglob/{a..c}.txt'
+          - 'vm6-capglob/{a,b}.txt'
   capacities:
-    brace_range: 1
+    brace_control: 1
