@@ -25,6 +25,12 @@ merge_queue:
 
 scopes:
   source:
-    manual:
+    files:
+      critical:
+        include:
+          - 'critical/**'
+      harmless:
+        include:
+          - 'harmless/**'
   capacities:
     '@acme/*': 1
