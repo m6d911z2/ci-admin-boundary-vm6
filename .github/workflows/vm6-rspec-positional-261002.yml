@@ -1,43 +1,35 @@
-name: VM6 RSpec Positional Quarantine 261002
+name: VM6 RSpec Positional Gate
 
 on:
-  workflow_dispatch:
   pull_request:
     types: [opened, synchronize, reopened]
-    branches: [main]
-    paths:
-      - 'spec/vm6_rspec_rebind_spec.rb'
+    branches:
+      - vm6-rspec-positional-protected-261002
+  workflow_dispatch:
 
 permissions:
   contents: read
 
 jobs:
-  mergify:
-    name: vm6-rspec-mergify
+  rspec:
+    name: vm6-rspec-positional-gate
     runs-on: ubuntu-latest
-    env:
-      MERGIFY_TOKEN: ${{ secrets.MERGIFY_TOKEN }}
-      MERGIFY_TEST_JOB_NAME: vm6-rspec-mergify
     steps:
       - uses: actions/checkout@v4
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.2'
-          bundler-cache: true
-      - name: Run shipping rspec-mergify 0.3.0
-        run: bundle exec rspec spec/vm6_rspec_rebind_spec.rb --format documentation
-
-  plain-control:
-    if: github.event_name == 'pull_request'
-    name: vm6-rspec-plain-control
-    runs-on: ubuntu-latest
-    env:
-      VM6_PLAIN_CONTROL: '1'
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: '3.2'
-          bundler-cache: true
-      - name: Run plain RSpec control without Mergify quarantine
-        run: bundle exec rspec spec/vm6_rspec_rebind_spec.rb --format documentation
+      - name: Install released RSpec integration
+        run: |
+          gem install rspec -v 3.13.2 --no-document
+          gem install rspec-mergify -v 0.3.0 --no-document
+      - name: Run trusted RSpec suite and print logical IDs
+        env:
+          MERGIFY_TOKEN: ${{ secrets.MERGIFY_TOKEN }}
+        shell: bash
+        run: |
+          set +e
+          rspec spec/guard_spec.rb --format progress --format json --out /tmp/vm6-rspec.json
+          rc=$?
+          ruby -rjson -e 'j=JSON.parse(File.read("/tmp/vm6-rspec.json")); j["examples"].each{|e| puts "VM6_RSPEC_ID=#{e["id"]} DESC=#{e["description"]} STATUS=#{e["status"]}"}'
+          exit "$rc"
