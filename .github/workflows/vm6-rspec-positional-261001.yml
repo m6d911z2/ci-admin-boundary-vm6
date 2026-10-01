@@ -1,0 +1,23 @@
+name: VM6 RSpec Positional Quarantine
+on:
+  pull_request:
+    branches:
+      - vm6-rspec-positional-protected-261001
+permissions:
+  contents: read
+jobs:
+  rspec:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+      - name: Install released RSpec integration
+        run: |
+          gem install rspec -v 3.13.2 --no-document
+          gem install rspec-mergify -v 0.3.0 --no-document
+      - name: Run protected RSpec guard
+        env:
+          MERGIFY_TOKEN: ${{ secrets.MERGIFY_TOKEN }}
+        run: rspec spec/rebind_spec.rb --require rspec_mergify --format progress
