@@ -1,0 +1,31 @@
+name: VM6 Cross-Base Same-SHA Scopes
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches:
+      - vm6-crossbase-protected-261001
+      - vm6-crossbase-benign-261001
+
+permissions:
+  contents: read
+
+jobs:
+  scopes:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Materialize trusted base config
+        run: git show "origin/${{ github.base_ref }}:.mergify.yml" > "$RUNNER_TEMP/vm6-crossbase-trusted.yml"
+      - name: Detect and upload scopes with released Mergify CLI
+        id: scopes
+        uses: Mergifyio/gha-mergify-ci@v25
+        with:
+          action: scopes
+          token: ${{ secrets.MERGIFY_TOKEN }}
+          mergify_config_path: ${{ runner.temp }}/vm6-crossbase-trusted.yml
+          mergify_cli_version: 2026.9.16.1
+      - name: Record detected scopes
+        run: echo 'VM6_CROSSBASE_SCOPES=${{ steps.scopes.outputs.scopes }}'
