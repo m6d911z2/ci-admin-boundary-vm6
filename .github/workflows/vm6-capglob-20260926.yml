@@ -23,5 +23,5 @@ jobs:
       - name: Hold speculative check
         run: |
           echo "VM6 controlled capacity discriminator"
-          sleep 240
+          sleep 900
           exit 1
