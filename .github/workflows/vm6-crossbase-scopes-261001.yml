@@ -6,6 +6,7 @@ on:
     branches:
       - vm6-crossbase-protected-261001
       - vm6-crossbase-benign-261001
+      - vm6-crossbase-benign-b-261001
 
 permissions:
   contents: read
