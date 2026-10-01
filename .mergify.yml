@@ -1,30 +1,21 @@
-pull_request_rules:
-  - name: VM6 capglob label queue
-    conditions:
-      - label = vm6-capglob-queue-20260926
-    actions:
-      queue: {}
-
 commands_restrictions:
   queue:
     conditions:
       - sender-permission >= write
 
 queue_rules:
-  - name: vm6-capglob-20260926
+  - name: vm6-conflict-head-261002
     queue_conditions: []
     merge_conditions:
-      - check-success = vm6-capglob-hold
-    batch_size: 1
-    merge_method: merge
-    checks_timeout: null
+      - check-success = vm6-conflict-never-pass-261002
+    batch_size: 2
+    batch_max_wait_time: 1 min
+    merge_method: merge-batch
+    conflict_resolvers:
+      - paths:
+          - vm6-conflict-head-261002.txt
+        strategy: prefer-theirs
 
 merge_queue:
   mode: parallel
   max_parallel_checks: 2
-
-scopes:
-  source:
-    manual:
-  capacities:
-    '@acme/*': 1
