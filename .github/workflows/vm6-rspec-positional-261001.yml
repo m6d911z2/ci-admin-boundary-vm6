@@ -1,0 +1,32 @@
+name: VM6 RSpec Positional Gate
+
+on:
+  push:
+    branches:
+      - vm6-rspec-positional-target-261001
+  pull_request:
+    branches:
+      - vm6-rspec-positional-target-261001
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+
+env:
+  MERGIFY_TOKEN: ${{ secrets.MERGIFY_TOKEN }}
+
+jobs:
+  rspec:
+    name: vm6-rspec-positional-gate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+      - name: Install shipping client
+        run: |
+          gem install rspec -v 3.13.2 --no-document
+          gem install rspec-mergify -v 0.3.0 --no-document
+      - name: Run victim-owned guard
+        run: rspec --require rspec_mergify spec/vm6_rspec_guard_spec.rb --format progress
