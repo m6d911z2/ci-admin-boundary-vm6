@@ -1,0 +1,41 @@
+name: VM6 RSpec Positional Quarantine 261001
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - Gemfile
+      - spec/vm6-rspec-positional-261001_spec.rb
+      - .github/workflows/vm6-rspec-positional-261001.yml
+  pull_request:
+    branches: [main]
+    paths:
+      - Gemfile
+      - spec/vm6-rspec-positional-261001_spec.rb
+      - .github/workflows/vm6-rspec-positional-261001.yml
+
+jobs:
+  control:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+          bundler-cache: true
+      - name: Control without Mergify quarantine
+        run: bundle exec rspec spec/vm6-rspec-positional-261001_spec.rb --format documentation
+
+  treatment:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+          bundler-cache: true
+      - name: Shipping rspec-mergify 0.3.0
+        env:
+          MERGIFY_TOKEN: ${{ secrets.MERGIFY_TOKEN }}
+        run: bundle exec rspec -r rspec_mergify spec/vm6-rspec-positional-261001_spec.rb --format documentation
