@@ -1,0 +1,27 @@
+name: VM6 Queue Scope Dispatch 261001
+
+on:
+  workflow_dispatch:
+    inputs:
+      pull_request:
+        required: true
+        type: string
+      head_sha:
+        required: true
+        type: string
+      scope:
+        required: true
+        type: string
+
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Upload exact controlled scope
+        uses: Mergifyio/gha-mergify-ci@v25
+        with:
+          action: scopes-upload
+          scopes: ${{ inputs.scope }}
+          token: ${{ secrets.MERGIFY_TOKEN }}
+          pull-request: ${{ inputs.pull_request }}
+          head-sha: ${{ inputs.head_sha }}
