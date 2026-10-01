@@ -1,0 +1,25 @@
+name: VM6 RSpec Positional Quarantine
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  rspec:
+    runs-on: ubuntu-latest
+    env:
+      MERGIFY_TOKEN: ${{ secrets.MERGIFY_TOKEN }}
+      MERGIFY_TEST_JOB_NAME: vm6-rspec-positional-261001
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+          bundler-cache: true
+      - name: Run published rspec-mergify 0.3.0
+        run: bundle exec rspec -r rspec_mergify spec/vm6_rspec_rebind_spec.rb --format documentation
