@@ -16,17 +16,6 @@ pull_request_rules:
       merge:
         method: merge
 
-  - name: VM6 RSpec positional protected merge 261002
-    conditions:
-      - base = vm6-rspec-positional-target-261001
-      - title = VM6_RSPEC_POSITIONAL_TREATMENT_261002
-      - author = livastic-vm6-primary-20260911
-      - label = vm6-rspec-ready-261002
-      - check-success = vm6-rspec-positional-gate
-    actions:
-      merge:
-        method: merge
-
 commands_restrictions:
   queue:
     conditions:
