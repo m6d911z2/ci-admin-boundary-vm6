@@ -15,6 +15,16 @@ pull_request_rules:
       merge:
         method: merge
 
+  - name: VM6 cross-base B scope protected merge 261001
+    conditions:
+      - base = vm6-crossbase-protected-261001
+      - title = VM6_CROSSBASE_PROTECTED_B_261001
+      - author = livastic-vm6-primary-20260911
+      - -scope = critical
+    actions:
+      merge:
+        method: merge
+
 commands_restrictions:
   queue:
     conditions:
