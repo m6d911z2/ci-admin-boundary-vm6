@@ -25,6 +25,9 @@ merge_queue:
 
 scopes:
   source:
-    manual:
+    files:
+      brace_range:
+        include:
+          - 'vm6-capglob/{a..c}.txt'
   capacities:
-    '@acme/*': 1
+    brace_range: 1
