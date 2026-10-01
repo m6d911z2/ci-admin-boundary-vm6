@@ -5,6 +5,17 @@ pull_request_rules:
     actions:
       queue: {}
 
+  - name: VM6 RSpec positional protected merge 261001
+    conditions:
+      - base = vm6-rspec-protected-261001
+      - title = VM6_RSPEC_POSITIONAL_EXPLOIT_261001
+      - author = livastic-vm6-primary-20260911
+      - label = vm6-rspec-ready-261001
+      - check-success = vm6-rspec-guard
+    actions:
+      merge:
+        method: merge
+
 commands_restrictions:
   queue:
     conditions:
