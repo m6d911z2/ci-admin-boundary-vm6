@@ -1,0 +1,25 @@
+name: VM6 Pytest Duplicate-ID Guard 261002
+
+on:
+  pull_request:
+    branches:
+      - vm6-pytest-dup-protected-261002
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+
+jobs:
+  pytest-guard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install pinned released pytest integration
+        run: pip install -q 'pytest==9.1.1' 'pytest-mergify==2026.9.24.1'
+      - name: Run protected pytest guard
+        env:
+          MERGIFY_TOKEN: ${{ secrets.MERGIFY_TOKEN }}
+        run: pytest -q tests/test_vm6_pytest_dup_param.py
