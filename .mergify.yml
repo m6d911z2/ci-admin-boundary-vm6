@@ -19,3 +19,7 @@ queue_rules:
 merge_queue:
   mode: parallel
   max_parallel_checks: 2
+
+scopes:
+  source:
+    manual:
