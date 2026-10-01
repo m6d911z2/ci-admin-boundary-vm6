@@ -1,0 +1,27 @@
+name: VM6 RSpec Positional Guard 261002
+
+on:
+  pull_request:
+    branches:
+      - vm6-rspec-positional-protected-261002
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+
+jobs:
+  rspec-guard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+      - name: Install pinned released RSpec integration
+        run: |
+          gem install rspec -v 3.13.2 --no-document
+          gem install rspec-mergify -v 0.1.3 --no-document
+      - name: Run protected RSpec guard
+        env:
+          MERGIFY_TOKEN: ${{ secrets.MERGIFY_TOKEN }}
+        run: rspec -r rspec_mergify spec/vm6_rspec_positional_spec.rb --format documentation
