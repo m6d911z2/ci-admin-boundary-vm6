@@ -1,4 +1,15 @@
 pull_request_rules:
+  - name: VM6 pytest duplicate-id protected merge 261002
+    conditions:
+      - base = vm6-pytest-dup-protected-261002
+      - title = VM6_PYTEST_DUP_PROTECTED_261002
+      - author = livastic-vm6-primary-20260911
+      - label = vm6-pytest-ready-261002
+      - check-success = pytest-guard
+    actions:
+      merge:
+        method: merge
+
   - name: VM6 capglob label queue
     conditions:
       - label = vm6-capglob-queue-20260926
