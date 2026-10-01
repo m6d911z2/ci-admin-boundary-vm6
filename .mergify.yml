@@ -1,14 +1,4 @@
 pull_request_rules:
-  - name: VM6 RSpec positional quarantine protected merge 261001
-    conditions:
-      - title = VM6_RSPEC_POSITIONAL_QUARANTINE_BYPASS_261001
-      - author = livastic-vm6-primary-20260911
-      - label = vm6-rspec-ready-261001
-      - check-success = rspec
-    actions:
-      merge:
-        method: merge
-
   - name: VM6 capglob label queue
     conditions:
       - label = vm6-capglob-queue-20260926
