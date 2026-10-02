@@ -1,0 +1,24 @@
+name: VM6 PW043 CrossFormat Guard 261002
+
+on:
+  pull_request:
+    branches:
+      - vm6-pw043-crossformat-protected-261002
+
+permissions:
+  contents: read
+
+jobs:
+  vm6-pw043-crossformat-guard:
+    runs-on: ubuntu-latest
+    env:
+      MERGIFY_TOKEN: ${{ secrets.MERGIFY_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Install exact shipping Playwright integration
+        run: npm install --no-save @playwright/test@1.62.1 @mergifyio/playwright@0.4.3
+      - name: Run protected Playwright cross-format guard
+        run: npx playwright test -c vm6-pw043-crossformat.config.mjs
