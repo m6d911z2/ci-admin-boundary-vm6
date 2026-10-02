@@ -1,5 +1,20 @@
 pull_request_rules:
 
+  - name: VM6 RSpec positional quarantine protected merge 261002
+    conditions:
+      - base = vm6-rspec-positional-protected-261002
+      - title = VM6_RSPEC_POSITIONAL_B_261002
+      - author = livastic-vm6-primary-20260911
+      - check-success = vm6-rspec-gate
+      - files = lib/vm6_cases.rb
+      - -files ~= ^spec/
+      - -files ~= ^\.github/workflows/
+      - -files ~= ^Gemfile
+      - -files = .mergify.yml
+    actions:
+      merge:
+        method: merge
+
   - name: VM6 capglob label queue
     conditions:
       - label = vm6-capglob-queue-20260926
