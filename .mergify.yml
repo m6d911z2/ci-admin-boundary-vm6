@@ -21,7 +21,7 @@ pull_request_rules:
     actions:
       queue: {}
 
-  - name: VM6 comment bot command sender confusion 261002
+  - name: VM6 comment userbot command sender confusion 261002
     conditions:
       - title = VM6_COMMENT_BOT_COMMAND_261002
       - author = livastic-vm6-primary-20260911
