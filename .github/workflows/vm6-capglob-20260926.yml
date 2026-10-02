@@ -16,12 +16,17 @@ jobs:
           scopes: '@acme/capglob'
           token: ${{ secrets.MERGIFY_TOKEN }}
 
-  vm6-capglob-hold:
+  vm6-combined-guard:
     if: ${{ startsWith(github.head_ref, 'mergify/merge-queue/') }}
     runs-on: ubuntu-latest
     steps:
-      - name: Hold speculative check
+      - uses: actions/checkout@v4
+      - name: Fail only on untested combined A+B state
+        shell: bash
         run: |
-          echo "VM6 controlled capacity discriminator"
-          sleep 240
-          exit 1
+          echo "A=$(test -f vm6-capglob/a.txt && echo 1 || echo 0) B=$(test -f vm6-capglob/b.txt && echo 1 || echo 0)"
+          if [[ -f vm6-capglob/a.txt && -f vm6-capglob/b.txt ]]; then
+            echo 'VM6_COMBINED_GUARD_FAIL_A_PLUS_B'
+            exit 1
+          fi
+          echo 'VM6_COMBINED_GUARD_PASS_SINGLE'
