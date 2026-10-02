@@ -21,24 +21,16 @@ pull_request_rules:
     actions:
       queue: {}
 
-  - name: VM6 comment relay sender confusion 261002
-    conditions:
-      - title = VM6_COMMENT_COMMAND_RELAY_261002
-      - label = vm6-comment-relay-ready-261002
-    actions:
-      comment:
-        message: "{{body}}"
-
 commands_restrictions:
   queue:
     conditions:
-      - sender-permission >= admin
+      - sender-permission >= write
 
 queue_rules:
   - name: vm6-freezerev-261002
     queue_conditions: []
     merge_conditions:
-      - check-success = vm6-comment-never-pass-261002
+      - check-success = vm6-freezerev-gate
     batch_size: 1
     merge_method: merge
     checks_timeout: null
