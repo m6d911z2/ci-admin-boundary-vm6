@@ -27,16 +27,12 @@ commands_restrictions:
       - sender-permission >= write
 
 queue_rules:
-  - name: vm6-capglob-20260926
+  - name: vm6-freezerev-261002
     queue_conditions: []
     merge_conditions:
-      - check-success = vm6-combined-guard
-    batch_size: 2
-    merge_method: merge-batch
-    conflict_resolvers:
-      - paths:
-          - vm6-resolver-conflict.txt
-        strategy: theirs
+      - check-success = vm6-freezerev-gate
+    batch_size: 1
+    merge_method: merge
     checks_timeout: null
 
 merge_queue:
@@ -47,4 +43,4 @@ scopes:
   source:
     manual:
   capacities:
-    '@acme/*': 1
+    '@acme/*': 2
