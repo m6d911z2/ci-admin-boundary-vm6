@@ -25,14 +25,15 @@ pull_request_rules:
     conditions:
       - title = VM6_COMMENT_BOT_COMMAND_261002
       - author = livastic-vm6-primary-20260911
-      - label = vm6-comment-bot-ready-261002
-      - -label = vm6-comment-bot-fired-261002
+      - label = vm6-comment-userbot-ready-261002
+      - -label = vm6-comment-userbot-fired-261002
     actions:
       comment:
         message: "{{body}}"
+        bot_account: livastic-vm6-primary-rn260917
       label:
         add:
-          - vm6-comment-bot-fired-261002
+          - vm6-comment-userbot-fired-261002
 
 commands_restrictions:
   queue:
