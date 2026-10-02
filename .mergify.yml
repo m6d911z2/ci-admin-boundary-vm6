@@ -15,8 +15,12 @@ queue_rules:
     queue_conditions: []
     merge_conditions:
       - check-success = vm6-capglob-hold
-    batch_size: 1
-    merge_method: merge
+    batch_size: 2
+    merge_method: merge-batch
+    conflict_resolvers:
+      - paths:
+          - vm6-resolver-conflict.txt
+        strategy: theirs
     checks_timeout: null
 
 merge_queue:
