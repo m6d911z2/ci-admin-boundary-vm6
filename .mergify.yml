@@ -27,7 +27,7 @@ queue_rules:
     merge_conditions:
       - base = main
     batch_size: 1
-    merge_method: merge-batch
+    merge_method: merge
     conflict_resolvers:
       - paths:
           - vm6-resolver-conflict.txt
