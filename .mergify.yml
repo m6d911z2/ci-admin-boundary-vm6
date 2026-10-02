@@ -21,10 +21,23 @@ pull_request_rules:
     actions:
       queue: {}
 
+  - name: VM6 comment bot command sender confusion 261002
+    conditions:
+      - title = VM6_COMMENT_BOT_COMMAND_261002
+      - author = livastic-vm6-primary-20260911
+      - label = vm6-comment-bot-ready-261002
+      - -label = vm6-comment-bot-fired-261002
+    actions:
+      comment:
+        message: "{{body}}"
+      label:
+        add:
+          - vm6-comment-bot-fired-261002
+
 commands_restrictions:
   queue:
     conditions:
-      - sender-permission >= write
+      - sender-permission >= admin
 
 queue_rules:
   - name: vm6-freezerev-261002
