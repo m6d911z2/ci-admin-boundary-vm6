@@ -25,8 +25,8 @@ queue_rules:
   - name: vm6-capglob-20260926
     queue_conditions: []
     merge_conditions:
-      - check-success = vm6-combined-guard
-    batch_size: 2
+      - base = main
+    batch_size: 1
     merge_method: merge-batch
     conflict_resolvers:
       - paths:
