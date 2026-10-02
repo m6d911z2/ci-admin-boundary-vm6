@@ -1,15 +1,5 @@
 pull_request_rules:
 
-  - name: VM6 PW043 cross-format protected merge 261002
-    conditions:
-      - base = vm6-pw043-crossformat-protected-261002
-      - title = VM6_PW043_CROSSFORMAT_TREATMENT_261002
-      - author = livastic-vm6-primary-20260911
-      - label = vm6-pw043-crossformat-ready-261002
-      - check-success = vm6-pw043-crossformat-guard
-    actions:
-      merge:
-        method: merge
   - name: VM6 capglob label queue
     conditions:
       - label = vm6-capglob-queue-20260926
