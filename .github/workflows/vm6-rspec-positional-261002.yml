@@ -1,0 +1,36 @@
+name: VM6 RSpec Positional Quarantine 261002
+
+on:
+  pull_request:
+    branches:
+      - vm6-rspec-positional-protected-261002
+
+permissions:
+  contents: read
+
+jobs:
+  plain-rspec-control:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+          bundler-cache: true
+      - name: Plain RSpec control
+        env:
+          VM6_PLAIN_CONTROL: '1'
+        run: bundle exec rspec spec/vm6_rspec_dynamic_spec.rb --format documentation
+
+  vm6-rspec-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+          bundler-cache: true
+      - name: Released rspec-mergify gate
+        env:
+          MERGIFY_TOKEN: ${{ secrets.MERGIFY_TOKEN }}
+        run: bundle exec rspec spec/vm6_rspec_dynamic_spec.rb --format documentation
