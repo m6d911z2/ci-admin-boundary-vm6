@@ -1,0 +1,31 @@
+name: VM6 Frozen Scope Dispatch 261002
+
+on:
+  workflow_dispatch:
+    inputs:
+      pull_request:
+        required: true
+        type: string
+      head_sha:
+        required: true
+        type: string
+      scope:
+        required: true
+        type: string
+
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: Mergifyio/setup-cli@dc99f07e699b94b39e5495c24596372813eadcbc
+        with:
+          mergify_cli_version: 2026.9.16.1
+      - name: Upload exact controlled scope
+        env:
+          MERGIFY_TOKEN: ${{ secrets.MERGIFY_TOKEN }}
+        run: |
+          mergify ci scopes-send \
+            --repository '${{ github.repository }}' \
+            --pull-request '${{ inputs.pull_request }}' \
+            --head-sha '${{ inputs.head_sha }}' \
+            --scope '${{ inputs.scope }}'
