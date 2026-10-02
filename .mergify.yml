@@ -27,16 +27,12 @@ commands_restrictions:
       - sender-permission >= write
 
 queue_rules:
-  - name: vm6-capglob-20260926
+  - name: vm6-scope-grammar-261002
     queue_conditions: []
     merge_conditions:
-      - check-success = vm6-combined-guard
-    batch_size: 2
-    merge_method: merge-batch
-    conflict_resolvers:
-      - paths:
-          - vm6-resolver-conflict.txt
-        strategy: theirs
+      - check-success = vm6-never-pass-scope-grammar-261002
+    batch_size: 1
+    merge_method: merge
     checks_timeout: null
 
 merge_queue:
@@ -45,6 +41,16 @@ merge_queue:
 
 scopes:
   source:
-    manual:
+    files:
+      vm6_exact:
+        include: ['vm6-capglob/a.txt']
+      vm6_brace:
+        include: ['vm6-capglob/{a,b}.txt']
+      vm6_doublestar:
+        include: ['**/a.txt']
+      vm6_class:
+        include: ['vm6-capglob/[ab].txt']
+      vm6_negclass:
+        include: ['vm6-capglob/[!b].txt']
   capacities:
-    '@acme/*': 1
+    '*': 1
