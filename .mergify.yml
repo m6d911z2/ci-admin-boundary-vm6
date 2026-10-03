@@ -27,6 +27,17 @@ commands_restrictions:
       - sender-permission >= write
 
 queue_rules:
+  - name: vm6-retry-basegen-261003
+    batch_size: 1
+    queue_conditions:
+      - base = vm6-retry-basegen-base-261003
+      - title = VM6_RETRY_BASEGEN_261003
+    merge_conditions:
+      - check-success = @github-actions/vm6-synthetic-head-delay
+    max_checks_retries: 1
+    merge_method: merge
+    checks_timeout: null
+
   - name: vm6-freezerev-261002
     queue_conditions: []
     merge_conditions:
