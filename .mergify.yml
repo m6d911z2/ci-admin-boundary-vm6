@@ -43,4 +43,4 @@ scopes:
   source:
     manual:
   capacities:
-    '@acme/*': 1
+    '@acme/*': 2
