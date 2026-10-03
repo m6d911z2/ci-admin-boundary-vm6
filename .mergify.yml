@@ -1,20 +1,3 @@
-priority_rules:
-  - name: vm6 crprio attacker high 261003
-    priority: 10000
-    conditions:
-      - title = VM6_CRPRIO_B_HIGH_261003
-    allow_checks_interruption: true
-  - name: vm6 crprio trusted 261003
-    priority: 5000
-    conditions:
-      - title = VM6_CRPRIO_A_261003
-    allow_checks_interruption: true
-  - name: vm6 crprio attacker low 261003
-    priority: 1000
-    conditions:
-      - title = VM6_CRPRIO_B_LOW_261003
-    allow_checks_interruption: true
-
 pull_request_rules:
 
   - name: VM6 RSpec positional quarantine protected merge 261002
@@ -44,20 +27,6 @@ commands_restrictions:
       - sender-permission >= write
 
 queue_rules:
-  - name: vm6-crprio-int-261003
-    queue_conditions:
-      - base = vm6-crprio-base-261003
-    merge_conditions:
-      - check-success = vm6-crprio-never
-    batch_size: 2
-    batch_max_wait_time: 30s
-    merge_method: merge-batch
-    checks_timeout: null
-    conflict_resolvers:
-      - paths:
-          - crprio.txt
-        strategy: theirs
-
   - name: vm6-freezerev-261002
     queue_conditions: []
     merge_conditions:
