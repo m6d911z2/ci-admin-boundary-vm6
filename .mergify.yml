@@ -1,10 +1,3 @@
-defaults:
-  queue_rule:
-    conflict_resolvers:
-      - paths:
-          - defaults-cr.txt
-        strategy: theirs
-
 pull_request_rules:
 
   - name: VM6 RSpec positional quarantine protected merge 261002
@@ -34,20 +27,6 @@ commands_restrictions:
       - sender-permission >= write
 
 queue_rules:
-  - name: vm6-cr-defaults-precedence-261003
-    queue_conditions:
-      - base = vm6-cr-defaults-base-261003
-    merge_conditions:
-      - check-success = vm6-cr-defaults-never
-    batch_size: 2
-    batch_max_wait_time: 20s
-    merge_method: merge-batch
-    checks_timeout: null
-    conflict_resolvers:
-      - paths:
-          - defaults-cr.txt
-        strategy: ours
-
   - name: vm6-freezerev-261002
     queue_conditions: []
     merge_conditions:
