@@ -1,0 +1,18 @@
+name: VM6 Retry Base Generation Gate
+on:
+  pull_request:
+    branches:
+      - vm6-retry-basegen-base-261003
+jobs:
+  vm6-retry-basegen-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Delay and validate base generation
+        shell: bash
+        run: |
+          set -euo pipefail
+          sleep 45
+          echo "policy=$(cat policy-version.txt)"
+          echo "validated=$(cat validated-against.txt)"
+          test "$(cat policy-version.txt)" = "$(cat validated-against.txt)"
