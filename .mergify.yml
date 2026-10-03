@@ -33,7 +33,7 @@ queue_rules:
       - base = vm6-retry-basegen-base-261003
       - title = VM6_RETRY_BASEGEN_261003
     merge_conditions:
-      - check-success = @github-actions/vm6-synthetic-head-delay
+      - check-success = @github-actions/vm6-retry-basegen-gate
     max_checks_retries: 1
     merge_method: merge
     checks_timeout: null
