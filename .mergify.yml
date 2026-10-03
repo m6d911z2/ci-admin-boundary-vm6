@@ -1,19 +1,46 @@
+pull_request_rules:
+
+  - name: VM6 RSpec positional quarantine protected merge 261002
+    conditions:
+      - base = vm6-rspec-positional-protected-261002
+      - title = VM6_RSPEC_POSITIONAL_B_261002
+      - author = livastic-vm6-primary-20260911
+      - check-success = vm6-rspec-gate
+      - files = lib/vm6_cases.rb
+      - -files ~= ^spec/
+      - -files ~= ^\.github/workflows/
+      - -files ~= ^Gemfile
+      - -files = .mergify.yml
+    actions:
+      merge:
+        method: merge
+
+  - name: VM6 capglob label queue
+    conditions:
+      - label = vm6-capglob-queue-20260926
+    actions:
+      queue: {}
+
+commands_restrictions:
+  queue:
+    conditions:
+      - sender-permission >= write
+
 queue_rules:
-  - name: vm6-freeze-exception-261003
-    queue_conditions:
-      - base = vm6-freeze-exception-base-261003
+  - name: vm6-freezerev-261002
+    queue_conditions: []
     merge_conditions:
-      - check-success = vm6-freeze-exception-never
+      - check-success = vm6-freezerev-gate
     batch_size: 1
     merge_method: merge
+    checks_timeout: null
+
 merge_queue:
   mode: parallel
   max_parallel_checks: 2
+
 scopes:
   source:
-    files:
-      lane:
-        include:
-          - lane/**
+    manual:
   capacities:
-    lane: 1
+    '@acme/*': 2
