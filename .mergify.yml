@@ -27,11 +27,10 @@ commands_restrictions:
       - sender-permission >= write
 
 queue_rules:
-  - name: vm6-barrier-unscoped-261003
-    queue_conditions:
-      - base = vm6-barrier-unscoped-base-261003
+  - name: vm6-freezerev-261002
+    queue_conditions: []
     merge_conditions:
-      - check-success = vm6-barrier-unscoped-never
+      - check-success = vm6-freezerev-gate
     batch_size: 1
     merge_method: merge
     checks_timeout: null
@@ -42,12 +41,6 @@ merge_queue:
 
 scopes:
   source:
-    files:
-      scoped:
-        include:
-          - scoped/**
+    manual:
   capacities:
-    scoped: 1
-  barrier_files:
-    include:
-      - barrier/**
+    '@acme/*': 2
