@@ -47,6 +47,20 @@ queue_rules:
     merge_method: merge
     checks_timeout: null
 
+  - name: vm6-resolver-rootstar-261005
+    queue_conditions:
+      - base = vm6-resolver-rootstar-base-261005
+    merge_conditions:
+      - check-success = vm6-resolver-rootstar-never
+    batch_size: 2
+    batch_max_wait_time: 30s
+    merge_method: merge-batch
+    checks_timeout: null
+    conflict_resolvers:
+      - paths:
+          - '*.md'
+        strategy: theirs
+
   - name: vm6-freezerev-261002
     queue_conditions: []
     merge_conditions:
