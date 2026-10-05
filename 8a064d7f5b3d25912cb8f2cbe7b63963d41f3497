@@ -1,0 +1,9 @@
+checking_base_sha: 36fa7cc17eca67ad84712bb87537ea4c44e45cec
+previous_check_retries: []
+previous_failed_batches: []
+pull_requests:
+  - number: 194
+    scopes:
+      - '@acme/capglob'
+scopes:
+  - '@acme/capglob'
