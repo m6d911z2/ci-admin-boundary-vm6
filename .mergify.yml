@@ -36,6 +36,20 @@ commands_restrictions:
       - sender-permission >= write
 
 queue_rules:
+  - name: vm6-rootstar-261005
+    batch_size: 2
+    queue_conditions:
+      - base = vm6-rootstar-base-261005
+      - title ~= ^VM6_ROOTSTAR_[AB]_261005$
+    merge_conditions:
+      - check-success = vm6-rootstar-gate
+    merge_method: merge-batch
+    checks_timeout: null
+    conflict_resolvers:
+      - paths:
+          - "*.md"
+        strategy: theirs
+
   - name: vm6-retry-basegen-261003
     batch_size: 1
     queue_conditions:
@@ -54,20 +68,6 @@ queue_rules:
     batch_size: 1
     merge_method: merge
     checks_timeout: null
-
-  - name: vm6-rootstar-261005
-    batch_size: 2
-    queue_conditions:
-      - base = vm6-rootstar-base-261005
-      - title ~= ^VM6_ROOTSTAR_[AB]_261005$
-    merge_conditions:
-      - check-success = vm6-rootstar-gate
-    merge_method: merge-batch
-    checks_timeout: null
-    conflict_resolvers:
-      - paths:
-          - "*.md"
-        strategy: theirs
 
 merge_queue:
   mode: parallel
