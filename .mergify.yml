@@ -70,7 +70,7 @@ queue_rules:
         strategy: theirs
 
 merge_queue:
-  mode: serial
+  mode: parallel
   max_parallel_checks: 2
 
 scopes:
