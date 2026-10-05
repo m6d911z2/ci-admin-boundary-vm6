@@ -1,0 +1,28 @@
+name: VM6 GitHub token cross-repo writeperm 261005
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Mergify repo binding A/B
+        env:
+          GH_TOKEN_FOR_MERGIFY: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          probe() {
+            label="$1"
+            url="$2"
+            code=$(curl -sS -o "$RUNNER_TEMP/$label.json" -w '%{http_code}' \
+              -H "Authorization: Bearer $GH_TOKEN_FOR_MERGIFY" \
+              -H 'Accept: application/json' \
+              "$url")
+            echo "VM6_${label}_HTTP=$code"
+            cat "$RUNNER_TEMP/$label.json"
+            echo
+          }
+          probe SOURCE 'https://api.mergify.com/v1/ci/m6d911z2/repositories/ci-admin-boundary-vm6/search/tests?per_page=2'
+          probe PRIVATE_SIBLING 'https://api.mergify.com/v1/ci/m6d911z2/repositories/mergify-transfer-boundary-vm6/search/tests?per_page=2'
