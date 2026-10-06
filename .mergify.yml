@@ -69,6 +69,20 @@ queue_rules:
           - "*.md"
         strategy: theirs
 
+  - name: vm6-jsondup-261006
+    batch_size: 2
+    queue_conditions:
+      - base = vm6-jsondup-base-261006
+      - title ~= ^VM6_JSONDUP_[AB]_261006$
+    merge_conditions:
+      - check-success = vm6-jsondup-never
+    merge_method: merge-batch
+    checks_timeout: null
+    conflict_resolvers:
+      - paths:
+          - "policy.json"
+        strategy: json
+
 merge_queue:
   mode: serial
   max_parallel_checks: 2
