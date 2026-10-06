@@ -5,5 +5,5 @@
   "pad3": 0,
   "pad4": 0,
   "pad5": 0,
-  "policy": "SAFE"
+  "policy": "ATTACKER_OPEN"
 }
