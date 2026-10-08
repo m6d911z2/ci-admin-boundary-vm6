@@ -41,7 +41,7 @@ jobs:
           const title = marker + 'A'.repeat(10000 - Array.from(marker).length);
           if (Array.from(title).length !== 10000) throw new Error('bad fixture length');
           test(title, () => {
-            expect(1).toBe(1);
+            expect(1).toBe(2);
           });
           JS
       - name: Upload one 10k CI test identity through current Mergify reporter
