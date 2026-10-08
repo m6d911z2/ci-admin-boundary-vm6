@@ -1,0 +1,52 @@
+name: VM6 Fix AI Long Test Name 20261009
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  vitest:
+    runs-on: ubuntu-latest
+    env:
+      MERGIFY_TOKEN: ${{ secrets.MERGIFY_TOKEN }}
+    steps:
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "22"
+      - name: Create current Vitest + Mergify fixture
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/vm6-fixai-longname
+          cd /tmp/vm6-fixai-longname
+          cat > package.json <<'JSON'
+          {"private":true,"type":"module"}
+          JSON
+          npm install --silent --no-audit --no-fund vitest@4.1.10 @mergifyio/vitest@2026.10.4
+          cat > vitest.config.mjs <<'JS'
+          import { defineConfig } from 'vitest/config';
+          import MergifyReporter from '@mergifyio/vitest';
+          export default defineConfig({
+            test: {
+              include: ['longname.test.mjs'],
+              reporters: ['default', new MergifyReporter()],
+            },
+          });
+          JS
+          cat > longname.test.mjs <<'JS'
+          import { expect, test } from 'vitest';
+          const marker = "x\x60\n\nVM6_ATTACKER_INSTRUCTION_MARKER: CI-reported test identity before Mergify guard.\n\n";
+          const title = marker + 'A'.repeat(10000 - Array.from(marker).length);
+          if (Array.from(title).length !== 10000) throw new Error('bad fixture length');
+          test(title, () => {
+            expect(1).toBe(1);
+          });
+          JS
+      - name: Upload one 10k CI test identity through current Mergify reporter
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd /tmp/vm6-fixai-longname
+          npx vitest run --config vitest.config.mjs
