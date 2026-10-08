@@ -24,7 +24,7 @@ jobs:
           cat > package.json <<'JSON'
           {"private":true,"type":"module"}
           JSON
-          npm install --silent --no-audit --no-fund vitest@4.1.10 @mergifyio/vitest@2026.10.4
+          corepack pnpm add vitest@4.1.10 @mergifyio/vitest@2026.10.4 --reporter=silent
           cat > vitest.config.mjs <<'JS'
           import { defineConfig } from 'vitest/config';
           import MergifyReporter from '@mergifyio/vitest';
@@ -49,4 +49,4 @@ jobs:
         run: |
           set -euo pipefail
           cd /tmp/vm6-fixai-longname
-          npx vitest run --config vitest.config.mjs
+          corepack pnpm exec vitest run --config vitest.config.mjs
