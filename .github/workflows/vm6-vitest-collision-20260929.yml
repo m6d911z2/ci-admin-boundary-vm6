@@ -1,71 +1,43 @@
-name: VM6 Vitest Quarantine Collision 20260929
+name: VM6 AI Long Test Name 20261008
 
 on:
   workflow_dispatch:
-    inputs:
-      mode:
-        description: "good or collision"
-        required: true
-        type: choice
-        options:
-          - good
-          - collision
 
 jobs:
   vitest:
     runs-on: ubuntu-latest
     env:
       MERGIFY_TOKEN: ${{ secrets.MERGIFY_TOKEN }}
+      MERGIFY_TEST_JOB_NAME: vm6-ai-longname-261008
     steps:
       - uses: actions/setup-node@v5
         with:
           node-version: "22"
-      - name: Create isolated Vitest fixture
+      - name: Create long-name Vitest fixture
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p /tmp/vm6-vitest-collision
-          cd /tmp/vm6-vitest-collision
+          mkdir -p /tmp/vm6-ai-longname
+          cd /tmp/vm6-ai-longname
           cat > package.json <<'JSON'
-          {
-            "name": "vm6-vitest-collision",
-            "private": true,
-            "type": "module"
-          }
+          {"name":"vm6-ai-longname","private":true,"type":"module"}
           JSON
           corepack pnpm add vitest@4.1.10 @mergifyio/vitest@0.4.1 --reporter=silent
           cat > vitest.config.mjs <<'JS'
           import { defineConfig } from 'vitest/config';
           import MergifyReporter from '@mergifyio/vitest';
-
-          export default defineConfig({
-            test: {
-              include: ['*.test.mjs'],
-              reporters: ['default', new MergifyReporter()],
-            },
-          });
+          export default defineConfig({test:{include:['*.test.mjs'],reporters:['default',new MergifyReporter()]}});
           JS
-          cat > good.test.mjs <<'JS'
+          cat > long.test.mjs <<'JS'
           import { describe, expect, test } from 'vitest';
-          describe('security', () => {
-            test('same', () => {
-              expect(1).toBe(1);
-            });
+          const longName = 'VM6_AI_LONG_' + 'A'.repeat(6200);
+          describe('vm6-ai-longname', () => {
+            test(longName, () => { expect(1).toBe(1); });
           });
           JS
-          if [ "${{ inputs.mode }}" = "collision" ]; then
-            cat > bad.test.mjs <<'JS'
-          import { describe, expect, test } from 'vitest';
-          describe('security', () => {
-            test('same', () => {
-              expect('critical invariant').toBe('preserved');
-            });
-          });
-          JS
-          fi
-      - name: Run Vitest with current Mergify reporter
+      - name: Run Vitest with Mergify reporter
         shell: bash
         run: |
           set -euo pipefail
-          cd /tmp/vm6-vitest-collision
+          cd /tmp/vm6-ai-longname
           corepack pnpm exec vitest run --config vitest.config.mjs
