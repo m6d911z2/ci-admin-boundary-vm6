@@ -1,0 +1,23 @@
+name: VM6 GitHub Token Product Authz 20261009
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: No-op own-repo product PUT with repo-scoped GITHUB_TOKEN
+        shell: bash
+        env:
+          GH_TOKEN_FOR_MERGIFY: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          body='{"products":["merge_protections","workflow_automation","merge_queue","ci_insights"]}'
+          code=$(curl --silent --show-error --output /tmp/resp --write-out '%{http_code}' \
+            -X PUT 'https://api.mergify.com/v1/products/m6d911z2/ci-admin-boundary-vm6' \
+            -H "Authorization: Bearer ${GH_TOKEN_FOR_MERGIFY}" \
+            -H 'Content-Type: application/json' \
+            --data "$body")
+          echo "VM6_OWN_REPO_PRODUCTS_HTTP=$code"
+          if [[ -s /tmp/resp ]]; then cat /tmp/resp; fi
