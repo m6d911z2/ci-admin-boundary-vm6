@@ -1,0 +1,63 @@
+name: VM6 Vitest OTel Provider MAIN 20261010
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  vitest:
+    strategy:
+      fail-fast: false
+      matrix:
+        mode: [honest, pseudo_buildkite]
+    runs-on: ubuntu-latest
+    env:
+      MERGIFY_TOKEN: ${{ secrets.MERGIFY_TOKEN }}
+      PROBE_MODE: ${{ matrix.mode }}
+    steps:
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Assemble harmless isolated Vitest suite
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "${MERGIFY_TOKEN:-}" || { echo 'Test fixture missing configured CI key'; exit 42; }
+          mkdir -p /tmp/vm6-vitest-otel-provider
+          cd /tmp/vm6-vitest-otel-provider
+          printf '%s\n' '{"private":true,"type":"module"}' > package.json
+          corepack pnpm add vitest@4.1.10 @mergifyio/vitest@2026.10.4 --reporter=silent
+          cat > vitest.config.mjs <<'JS'
+          import { defineConfig } from 'vitest/config';
+          import MergifyReporter from '@mergifyio/vitest';
+          export default defineConfig({
+            test: { include: ['vm6-probe.test.mjs'], reporters: ['default', new MergifyReporter()] },
+          });
+          JS
+          cat > vm6-probe.test.mjs <<'JS'
+          import { expect, test } from 'vitest';
+          const name = `vm6-vitest-main-provider-${process.env.PROBE_MODE}-failure-261010`;
+          test(name, () => { expect(1).toBe(2); });
+          JS
+      - name: Run and report one expected failed test
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd /tmp/vm6-vitest-otel-provider
+          echo "VM6_INERT_PROVIDER_MODE=${PROBE_MODE}"
+          if [[ "$PROBE_MODE" == 'pseudo_buildkite' ]]; then
+            env -u GITHUB_ACTIONS \
+              BUILDKITE=true \
+              BUILDKITE_REPO="https://github.com/${GITHUB_REPOSITORY}.git" \
+              BUILDKITE_PIPELINE_SLUG="vm6-provenance-simulated-buildkite-261010" \
+              BUILDKITE_LABEL="vm6-controlled-vitest-pseudo-buildkite" \
+              BUILDKITE_STEP_KEY="vm6-controlled-vitest-pseudo-buildkite" \
+              BUILDKITE_BRANCH="${GITHUB_REF_NAME}" \
+              BUILDKITE_COMMIT="${GITHUB_SHA}" \
+              BUILDKITE_BUILD_ID="${GITHUB_RUN_ID}" \
+              BUILDKITE_BUILD_NUMBER="${GITHUB_RUN_NUMBER}" \
+              BUILDKITE_JOB_ID="${GITHUB_JOB}" \
+              BUILDKITE_BUILD_URL="https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}" \
+              corepack pnpm exec vitest run --config vitest.config.mjs
+          else
+            corepack pnpm exec vitest run --config vitest.config.mjs
+          fi
