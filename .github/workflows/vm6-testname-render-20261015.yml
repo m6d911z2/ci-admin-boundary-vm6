@@ -1,0 +1,41 @@
+name: VM6 Test Name Render Boundary 20261015
+on:
+  workflow_dispatch:
+    inputs:
+      test_title:
+        description: "Owned CI test-name rendering canary"
+        required: true
+        type: string
+permissions:
+  contents: read
+jobs:
+  vitest:
+    runs-on: ubuntu-latest
+    env:
+      MERGIFY_TOKEN: ${{ secrets.MERGIFY_TOKEN }}
+      VM6_UNTRUSTED_TEST_TITLE: ${{ inputs.test_title }}
+    steps:
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Upload controlled test name and no other source data
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/vm6-testname-render-1015
+          cd /tmp/vm6-testname-render-1015
+          printf '%s\n' '{"name":"vm6-testname-render-1015","private":true,"type":"module"}' > package.json
+          corepack pnpm add vitest@4.1.10 @mergifyio/vitest@0.4.1 --reporter=silent
+          cat > vitest.config.mjs <<'JS'
+          import { defineConfig } from 'vitest/config';
+          import MergifyReporter from '@mergifyio/vitest';
+          export default defineConfig({test:{include:['render.test.mjs'],reporters:['default',new MergifyReporter()]}});
+          JS
+          cat > render.test.mjs <<'JS'
+          import {test, expect} from 'vitest';
+          const title = process.env.VM6_UNTRUSTED_TEST_TITLE ?? '';
+          if (title.length < 4 || title.length > 500) throw new Error('Unacceptable canary length');
+          console.log('VM6_UNTRUSTED_CANARY_LENGTH=' + title.length);
+          test(title, () => expect(1).toBe(2));
+          JS
+          corepack pnpm exec vitest run --config vitest.config.mjs
