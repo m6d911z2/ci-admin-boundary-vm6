@@ -1,12 +1,80 @@
 pull_request_rules:
-  - name: VM6 exact CI gate 20261014
+
+  - name: VM6 classic app-id pin finalizer 261003
     conditions:
-      - base = vm6-fg-e2e-base-261014
-      - title = VM6_FG_E2E_261014
-      - author = livastic-vm6-primary-20260911
-      - files = vm6-fg-e2e-payload-261014.txt
-      - "#files = 1"
-      - check-success = @github-actions/vm6-fg-e2e-ci
+      - base = vm6-app-pin-base-261003
+      - title = VM6_APP_PIN_ARM_261003
+      - check-success = vm6-app-pin-gate
     actions:
       merge:
         method: merge
+
+  - name: VM6 RSpec positional quarantine protected merge 261002
+    conditions:
+      - base = vm6-rspec-positional-protected-261002
+      - title = VM6_RSPEC_POSITIONAL_B_261002
+      - author = livastic-vm6-primary-20260911
+      - check-success = vm6-rspec-gate
+      - files = lib/vm6_cases.rb
+      - -files ~= ^spec/
+      - -files ~= ^\.github/workflows/
+      - -files ~= ^Gemfile
+      - -files = .mergify.yml
+    actions:
+      merge:
+        method: merge
+
+  - name: VM6 capglob label queue
+    conditions:
+      - label = vm6-capglob-queue-20260926
+    actions:
+      queue: {}
+
+commands_restrictions:
+  queue:
+    conditions:
+      - sender-permission >= write
+
+queue_rules:
+  - name: vm6-rootstar-261005
+    batch_size: 2
+    queue_conditions:
+      - base = vm6-rootstar-base-261005
+      - title ~= ^VM6_ROOTSTAR_[AB]_261005$
+    merge_conditions:
+      - check-success = vm6-rootstar-gate
+    merge_method: merge-batch
+    checks_timeout: null
+    conflict_resolvers:
+      - paths:
+          - "*.md"
+        strategy: theirs
+
+  - name: vm6-retry-basegen-261003
+    batch_size: 1
+    queue_conditions:
+      - base = vm6-retry-basegen-base-261003
+      - title = VM6_RETRY_BASEGEN_261003
+    merge_conditions:
+      - check-success = @github-actions/vm6-retry-basegen-gate
+    max_checks_retries: 1
+    merge_method: merge
+    checks_timeout: null
+
+  - name: vm6-freezerev-261002
+    queue_conditions: []
+    merge_conditions:
+      - check-success = vm6-freezerev-gate
+    batch_size: 1
+    merge_method: merge
+    checks_timeout: null
+
+merge_queue:
+  mode: parallel
+  max_parallel_checks: 2
+
+scopes:
+  source:
+    manual:
+  capacities:
+    '@acme/*': 2
