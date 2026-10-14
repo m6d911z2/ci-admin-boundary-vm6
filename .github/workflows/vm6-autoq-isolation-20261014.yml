@@ -1,16 +1,25 @@
 name: VM6 AutoQ Isolation 20261014
 on:
   workflow_dispatch:
+    inputs:
+      mode:
+        description: "Controlled bad or good test outcome"
+        required: true
+        type: choice
+        options:
+          - bad
+          - good
 jobs:
   vitest:
     runs-on: ubuntu-latest
     env:
       MERGIFY_TOKEN: ${{ secrets.MERGIFY_TOKEN }}
+      AUTOQ_MODE: ${{ inputs.mode }}
     steps:
       - uses: actions/setup-node@v5
         with:
           node-version: "22"
-      - name: Run isolated positive test
+      - name: Run isolated recovery test
         shell: bash
         run: |
           set -euo pipefail
@@ -29,7 +38,7 @@ jobs:
           import { describe, test, expect } from 'vitest';
           describe('security', () => {
             test('vm6-autoq-isolation-261014-c7', () => {
-              expect(2).toBe(2);
+              expect(2).toBe(process.env.AUTOQ_MODE === 'bad' ? 3 : 2);
             });
           });
           JS
