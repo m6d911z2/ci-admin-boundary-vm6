@@ -1,10 +1,10 @@
-name: VM6 Public-Only Auto-Unquarantine Boundary 20261015
+name: VM6 FixAI Two-Repo Short Trace Control
 on:
   workflow_dispatch:
 permissions:
   contents: read
 jobs:
-  telemetry-positive:
+  reporter:
     runs-on: ubuntu-latest
     timeout-minutes: 8
     env:
