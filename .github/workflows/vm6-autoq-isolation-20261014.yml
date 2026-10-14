@@ -41,7 +41,7 @@ jobs:
           cat > autoq.test.mjs <<'JS'
           import { describe, test, expect } from 'vitest';
           describe('security', () => {
-            test('vm6-autoq-isolation-261014-c7', () => {
+            test('vm6-crossrepo-autoq-z1-261014', () => {
               console.log('VM6_AUTOQ_MODE_OBSERVED=' + process.env.AUTOQ_MODE);
               expect(2).toBe(process.env.AUTOQ_MODE === 'bad' ? 3 : 2);
             });
