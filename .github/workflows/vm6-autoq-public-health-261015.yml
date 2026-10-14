@@ -1,0 +1,79 @@
+name: VM6 Public-Only Auto-Unquarantine Boundary 20261015
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  telemetry-positive:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      MERGIFY_TOKEN: ${{ secrets.MERGIFY_TOKEN }}
+    steps:
+      - name: Verify owned account CI credentials without printing key
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'JS'
+          const token=process.env.MERGIFY_TOKEN;
+          if (!token) throw Error('Missing pre-existing research CI key');
+          const res=await fetch('https://api.mergify.com/v1/application',{headers:{Authorization:'Bearer '+token}});
+          const account=await res.json().catch(()=>({}));
+          console.log('VM6_KEY_CHECK_HTTP='+res.status);
+          console.log('VM6_KEY_SCOPE='+(account.scope??'unknown'));
+          console.log('VM6_KEY_ACCOUNT='+(account.account_scope?.login??'unknown'));
+          if (!res.ok || account.scope!=='ci' || account.account_scope?.login!=='m6d911z2') {
+            throw Error('Trusted key is not scoped to owned organization');
+          }
+          JS
+      - name: Record a single clean passing public-repository test on main using official reporter
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm init -y >/dev/null
+          npm install --silent --no-audit --no-fund @mergifyio/ci-core@0.3.4
+          cat > vm6-autoq-public-success.mjs <<'JS'
+          import {createTracing,startSessionSpan,emitTestCaseSpan,endSessionSpan,generateTestRunId} from '@mergifyio/ci-core';
+          const destination='m6d911z2/ci-admin-boundary-vm6';
+          if (process.env.GITHUB_REPOSITORY!==destination || process.env.GITHUB_REF!=='refs/heads/main') {
+            throw Error('Refusing to send outside exact owned public default branch');
+          }
+          const testRunId=generateTestRunId();
+          console.log('VM6_CI_TEST_NAME=security > VM6_FIXAI_SHARED_SHORT_261015');
+          console.log('VM6_CI_TARGET='+destination);
+          console.log('VM6_CI_BRANCH='+process.env.GITHUB_REF);
+          console.log('VM6_CI_COMMIT='+process.env.GITHUB_SHA);
+          console.log('VM6_CI_TEST_RUN_ID='+testRunId);
+          const tr=createTracing({
+            apiUrl:'https://api.mergify.com',
+            token:process.env.MERGIFY_TOKEN,
+            repoName:destination,
+            frameworkAttributes:{
+              'test.framework':'vitest',
+              'test.framework.version':'4.1.10',
+              'vcs.repository.name':destination,
+              'vcs.repository.url.full':'https://github.com/'+destination,
+              'vcs.repository.id':1365916854
+            },
+            testRunId,
+            tracerName:'vm6-controlled-public-autoq-health'
+          });
+          if (!tr) throw Error('No official exporter');
+          const session=startSessionSpan(tr,'VM6 public-only health recovery source');
+          emitTestCaseSpan(tr.tracer,session,{
+            filepath:'vm6-owned-fixai-marker.spec.mjs',
+            absoluteFilepath:'/vm6-controlled/vm6-owned-fixai-marker.spec.mjs',
+            function:'VM6_FIXAI_SHARED_SHORT_261015',
+            lineno:1,
+            namespace:'security',
+            scope:'case',
+            status:'passed',
+            duration:40,
+            startTime:Date.now()-65,
+            retryCount:0,
+            flaky:false
+          });
+          await endSessionSpan(tr,session,'passed');
+          console.log('VM6_PUBLIC_TRACE_UPLOAD_OK');
+          JS
+          node vm6-autoq-public-success.mjs
