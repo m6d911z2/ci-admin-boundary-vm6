@@ -1,0 +1,84 @@
+name: VM6 FixAI Two-Repo Short Trace Control
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  reporter:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      MERGIFY_TOKEN: ${{ secrets.MERGIFY_TOKEN }}
+    steps:
+      - name: Verify owner scoped CI key
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'JS'
+          const token = process.env.MERGIFY_TOKEN;
+          if (!token) throw Error('Missing pre-existing owner CI key');
+          const r = await fetch('https://api.mergify.com/v1/application', {headers: {Authorization: 'Bearer ' + token}});
+          const info = await r.json().catch(() => ({}));
+          console.log('VM6_KEY_STATUS=' + r.status);
+          console.log('VM6_KEY_SCOPE=' + (info.scope ?? 'unknown'));
+          console.log('VM6_KEY_ORG=' + (info.account_scope?.login ?? 'unknown'));
+          if (!r.ok || info.scope !== 'ci' || info.account_scope?.login !== 'm6d911z2')
+            throw Error('CI key is not the expected research organization credential');
+          JS
+      - name: Send distinct harmless test failures to two owned repos
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm init -y >/dev/null
+          npm install --silent --no-audit --no-fund @mergifyio/ci-core@0.3.4
+          cat > vm6-prompt-traces.mjs <<'JS'
+          import {createTracing, generateTestRunId, startSessionSpan, emitTestCaseSpan, endSessionSpan} from '@mergifyio/ci-core';
+          const destinations = [
+            {
+              repoName:'m6d911z2/ci-admin-boundary-vm6',
+              message:'VM6_FIXAI_PUBLIC_ONLY_SENTINEL_261015',
+              repoId:1365916854
+            },
+            {
+              repoName:'m6d911z2/mergify-transfer-boundary-vm6',
+              message:'VM6_FIXAI_PRIVATE_ONLY_SENTINEL_261015',
+              repoId:1365877617
+            }
+          ];
+          for(const {repoName,message,repoId} of destinations){
+            if(!repoId)throw Error('Missing exact target GitHub repository ID');
+            const testRunId = generateTestRunId();
+            const t = createTracing({
+              token:process.env.MERGIFY_TOKEN,
+              repoName,
+              testRunId,
+              apiUrl:'https://api.mergify.com',
+              frameworkAttributes:{
+                'test.framework':'vitest',
+                'test.framework.version':'4.1.10',
+                'vcs.repository.name':repoName,
+                'vcs.repository.url.full':'https://github.com/'+repoName,
+                'vcs.repository.id':repoId
+              },
+              tracerName:'vm6-short-shared-failure-test'
+            });
+            if(!t) throw Error('No official CI trace exporter for '+repoName);
+            const session = startSessionSpan(t,'VM6 short FixAI consumer differential owned session');
+            const now=Date.now()-100;
+            emitTestCaseSpan(t.tracer,session,{
+              filepath:'vm6-owned-fixai-marker.spec.mjs',
+              absoluteFilepath:'/vm6-controlled/vm6-owned-fixai-marker.spec.mjs',
+              function:'VM6_FIXAI_SHARED_SHORT_261015',
+              lineno:1,
+              namespace:'security',
+              scope:'case',
+              status:'failed',
+              error:{type:'VM6IntentionalResearchFailure',message,stacktrace:'VM6IntentionalResearchFailure: '+message+'\\n at vm6-owned-fixai-marker.spec.mjs:1:1'},
+              duration:45,startTime:now,retryCount:0,flaky:false
+            });
+            await endSessionSpan(t,session,'failed');
+            console.log('VM6_UPLOADED_TO='+repoName);
+            console.log('VM6_TEST_RUN_ID='+testRunId);
+          }
+          JS
+          node vm6-prompt-traces.mjs
