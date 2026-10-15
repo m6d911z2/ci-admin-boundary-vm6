@@ -1,0 +1,78 @@
+name: VM6 CI Public PR Comment ValidCfg 20261015
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened]
+permissions:
+  contents: read
+jobs:
+  reporter:
+    if: github.event.pull_request.title == 'VM6_CI_PR_COMMENT_VALIDCFG_261015'
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      MERGIFY_TOKEN: ${{ secrets.MERGIFY_TOKEN }}
+    steps:
+      - name: Verify CI key exact owned organization without printing credential
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'JS'
+          if (!process.env.MERGIFY_TOKEN) throw Error('Research key absent');
+          const r=await fetch('https://api.mergify.com/v1/application',{headers:{Authorization:'Bearer '+process.env.MERGIFY_TOKEN}});
+          const d=await r.json().catch(()=>({}));
+          console.log('VM6_KEY_STATUS='+r.status);
+          if(!r.ok || d.scope!=='ci' || d.account_scope?.login!=='m6d911z2') throw Error('Key not scoped to research org');
+          JS
+      - name: Upload controlled public-only failed test with official Mergify CI exporter
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ "$GITHUB_REPOSITORY" != 'm6d911z2/ci-admin-boundary-vm6' ] ||
+             [ "$GITHUB_EVENT_NAME" != 'pull_request' ] ||
+             [ "$GITHUB_HEAD_REF" != 'vm6-ci-comment-validcfg-261015' ] ||
+             [ "$GITHUB_BASE_REF" != 'main' ]; then
+             echo 'Unexpected repository/event/head/base' >&2
+             exit 64
+          fi
+          npm init -y >/dev/null
+          npm install --silent --no-audit --no-fund @mergifyio/ci-core@0.3.4
+          cat > vm6-pr-comment-test.mjs <<'JS'
+          import {createTracing,generateTestRunId,startSessionSpan,emitTestCaseSpan,endSessionSpan} from '@mergifyio/ci-core';
+          const repo='m6d911z2/ci-admin-boundary-vm6';
+          const msg='VM6_FIXAI_PUBLIC_ONLY_SENTINEL_261015';
+          if (process.env.GITHUB_REPOSITORY!==repo || process.env.GITHUB_HEAD_REF!=='vm6-ci-comment-validcfg-261015') {
+            throw Error('Refusing upload outside exact owned B-public test source');
+          }
+          const runId=generateTestRunId();
+          const t=createTracing({
+            apiUrl:'https://api.mergify.com',
+            token:process.env.MERGIFY_TOKEN,
+            repoName:repo,testRunId:runId,
+            frameworkAttributes:{
+              'test.framework':'vitest',
+              'test.framework.version':'4.1.10',
+              'vcs.repository.name':repo,
+              'vcs.repository.url.full':'https://github.com/'+repo,
+              'vcs.repository.id':1365916854
+            },
+            tracerName:'vm6-pr-public-failure-comment-validcfg'
+          });
+          if(!t) throw Error('No official exporter');
+          const sess=startSessionSpan(t,'VM6 public PR comment validcfg failure');
+          emitTestCaseSpan(t.tracer,sess,{
+            filepath:'vm6-owned-fixai-marker.spec.mjs',
+            absoluteFilepath:'/vm6-controlled/vm6-owned-fixai-marker.spec.mjs',
+            function:'VM6_FIXAI_SHARED_SHORT_261015',
+            lineno:1, namespace:'security',scope:'case',
+            status:'failed',
+            error:{type:'VM6IntentionalResearchFailure',message:msg,stacktrace:'VM6IntentionalResearchFailure: '+msg+'\\n at vm6-owned-fixai-marker.spec.mjs:1:1'},
+            duration:45,startTime:Date.now()-90,retryCount:0,flaky:false
+          });
+          await endSessionSpan(t,sess,'failed');
+          console.log('VM6_PUBLIC_PR_TRACE_UPLOADED');
+          console.log('VM6_PUBLIC_PR_TRACE_RUN_ID='+runId);
+          JS
+          node vm6-pr-comment-test.mjs
+          echo 'VM6_EXPECTED_PUBLIC_JOB_FAILURE_FOR_PR_REPORT'
+          exit 1
