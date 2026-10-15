@@ -1,0 +1,58 @@
+name: VM6 Vitest Plugin Comment Probe 261015
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened]
+permissions:
+  contents: read
+jobs:
+  vitest:
+    if: github.event.pull_request.title == 'VM6_VITEST_PLUGIN_COMMENT_PROBE_261015'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      MERGIFY_TOKEN: ${{ secrets.MERGIFY_TOKEN }}
+    steps:
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Official vitest reporter public-only failing test
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ "$GITHUB_REPOSITORY" != 'm6d911z2/ci-admin-boundary-vm6' ] ||
+             [ "$GITHUB_EVENT_NAME" != 'pull_request' ] ||
+             [ "$GITHUB_HEAD_REF" != 'vm6-vitest-comment-probe-261015' ] ||
+             [ "$GITHUB_BASE_REF" != 'main' ]; then
+            echo 'Unexpected repository/event/head/base' >&2
+            exit 64
+          fi
+          node --input-type=module <<'JS'
+          if (!process.env.MERGIFY_TOKEN) throw Error('Research key absent');
+          const r=await fetch('https://api.mergify.com/v1/application',{headers:{Authorization:'Bearer '+process.env.MERGIFY_TOKEN}});
+          const d=await r.json().catch(()=>({}));
+          console.log('VM6_KEY_STATUS='+r.status);
+          if(!r.ok || d.scope!=='ci' || d.account_scope?.login!=='m6d911z2') throw Error('Key not scoped to research org');
+          JS
+          mkdir -p /tmp/vm6-vitest-comment-probe-261015
+          cd /tmp/vm6-vitest-comment-probe-261015
+          printf '%s\n' '{"name":"vm6-vitest-comment-probe-261015","private":true,"type":"module"}' > package.json
+          corepack pnpm add vitest@4.1.10 @mergifyio/vitest@0.4.1 --reporter=silent
+          cat > vitest.config.mjs <<'JS'
+          import { defineConfig } from 'vitest/config';
+          import MergifyReporter from '@mergifyio/vitest';
+          export default defineConfig({test:{include:['probe.test.mjs'],reporters:['default',new MergifyReporter()]}});
+          JS
+          cat > probe.test.mjs <<'JS'
+          import {test, expect} from 'vitest';
+          test('VM6_VITEST_PLUGIN_COMMENT_PROBE_261015', () => {
+            throw new Error('VM6_VITEST_PUBLIC_ONLY_PROBE_261015');
+          });
+          JS
+          set +e
+          corepack pnpm exec vitest run --config vitest.config.mjs
+          code=$?
+          set -e
+          echo "VM6_VITEST_EXIT=$code"
+          echo "VM6_VITEST_PROBE_UPLOADED"
+          exit 1
